@@ -12,9 +12,17 @@ class AddProject extends Component {
             description: "",
             startDate: "",
             endDate: "",
+            errors: {}
         };
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this); 
+   }
+
+   //life cycle hooks
+   componentWillReceiveProps(nextProps){
+if(nextProps.errors){
+    this.setState({errors: nextProps.errors})
+}
    }
 
     onChange(e){
@@ -34,8 +42,10 @@ class AddProject extends Component {
     }
 
     render() {
+        const {errors} = this.state;
         return (
             <div>
+            
             <div className="project">
             <div className="container">
                 <div className="row">
@@ -43,30 +53,38 @@ class AddProject extends Component {
                         <h5 className="display-4 text-center">Create / Edit Project form</h5>
                         <hr />
                         <form onSubmit={this.onSubmit}>
+                        <p>{errors.projectName}</p>
                             <div className="form-group">
-                                <input type="text" class="form-control form-control-lg " placeholder="Project Name" name="projectName" 
+                                <input type="text" class="form-control form-control-lg " 
+                                placeholder="Project Name" name="projectName" 
                                 value={this.state.projectName}
                                 onChange={this.onChange}/>
                             </div>
+                            <p>{errors.projectIdentifier}</p>
                             <div className="form-group">
-                                <input type="text" class="form-control form-control-lg" placeholder="Unique Project ID" 
+                                <input type="text" class="form-control form-control-lg" 
+                                placeholder="Unique Project ID" 
                                 name="projectIdentifier"
                                 value={this.state.projectIdentifier}
                                 onChange={this.onChange}/>
                             </div>
+                            <p>{errors.description}</p>
                             <div className="form-group">
-                                <textarea class="form-control form-control-lg" placeholder="Project Description" name="description" 
+                                <textarea class="form-control form-control-lg" 
+                                placeholder="Project Description" name="description" 
                                 value={this.state.description}
                                 onChange={this.onChange}></textarea>
                             </div>
                             <h6>Start Date</h6>
                             <div className="form-group">
-                                <input type="date" class="form-control form-control-lg" name="startDate" value={this.state.startDate}
+                                <input type="date" class="form-control form-control-lg" 
+                                name="startDate" value={this.state.startDate}
                                 onChange={this.onChange}/>
                             </div>
                             <h6>Estimated End Date</h6>
                             <div className="form-group">
-                                <input type="date" class="form-control form-control-lg" name="endDate" value={this.state.endDate}
+                                <input type="date" class="form-control form-control-lg" 
+                                name="endDate" value={this.state.endDate}
                                 onChange={this.onChange}/>
                             </div>
     
@@ -82,10 +100,15 @@ class AddProject extends Component {
 }
 
 AddProject.propTypes = {
-    createProject: PropTypes.func.isRequired
+    createProject: PropTypes.func.isRequired,
+    errors : PropTypes.object.isRequired
 };
 
+const mapStateToProps = state => ({
+    errors : state.errors
+})
+
 export default connect(
-    null, 
+    mapStateToProps, 
     {createProject}
     )(AddProject);
